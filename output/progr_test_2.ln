@@ -1,0 +1,3 @@
+
+LINENO   36,1009,          WRITE('My int: ', my_int, CR)
+LINENO   37,1044,      END progr_test_2

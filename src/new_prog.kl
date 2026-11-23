@@ -1,0 +1,6 @@
+PROGRAM new_prog
+
+BEGIN
+	WRITE('new prog',CR)
+	
+END new_prog

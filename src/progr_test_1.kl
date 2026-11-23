@@ -1,0 +1,63 @@
+PROGRAM progr_test_1
+----------------------------------------------------
+-- Creation date: 2026-11-23
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-23
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.2'
+%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR + COMMAND
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+
+
+%INCLUDE my_const
+%INCLUDE mytype_t
+%INCLUDE myglobvars_v
+i: INTEGER
+user_input : INTEGER
+var_uninit : INTEGER
+status: INTEGER
+my_var2:INTEGER
+my_array  : ARRAY[15] OF INTEGER
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+----------------------------------------------------
+-- BEGIN progr_test_1
+----------------------------------------------------
+BEGIN
+
+    IF UNINIT(my_int) THEN my_int = 0; ENDIF
+    IF UNINIT(var_uninit) THEN var_uninit = 0; ENDIF
+
+    FOR i=1 TO 5 DO
+        my_int = my_int + 1 
+        WRITE('My int: ', my_int,CR)
+    ENDFOR
+    WRITE('Zadej reg do ktereho chces ulozit hodnotu: ')
+    --READ(user_input)
+    IF UNINIT(user_input) THEN user_input = 55; ENDIF
+    SET_INT_REG(user_input, my_int, status)
+    IF status <> 0 THEN
+        POST_ERR(status, '', 0, 2)
+    ENDIF
+    --GET_REG(user_input, real_flag, int_value, real_value, status)
+    WRITE('Var uninit: ', var_uninit, CR)
+END progr_test_1

@@ -1,0 +1,37 @@
+PROGRAM progr_test_2
+----------------------------------------------------
+-- Creation date: 2026-11-23
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-23
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.0'
+%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+--%NOABORT = ERROR + COMMAND
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+%INCLUDE myglobvars_v
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+----------------------------------------------------
+-- BEGIN progr_test_2
+----------------------------------------------------
+BEGIN
+    WRITE('My int: ', my_int, CR)
+END progr_test_2

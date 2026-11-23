@@ -1,0 +1,21 @@
+
+LINENO   46,1158,          IF UNINIT(my_int) THEN my_int = 0; ENDIF
+LINENO   46,1158,          IF UNINIT(my_int) THEN my_int = 0; ENDIF
+LINENO   46,1158,          IF UNINIT(my_int) THEN my_int = 0; ENDIF
+LINENO   47,1204,          IF UNINIT(var_uninit) THEN var_uninit = 0; ENDIF
+LINENO   47,1204,          IF UNINIT(var_uninit) THEN var_uninit = 0; ENDIF
+LINENO   47,1204,          IF UNINIT(var_uninit) THEN var_uninit = 0; ENDIF
+LINENO   49,1260,          FOR i=1 TO 5 DO
+LINENO   50,1281,              my_int = my_int + 1 
+LINENO   51,1311,              WRITE('My int: ', my_int,CR)
+LINENO   52,1349,          ENDFOR
+LINENO   53,1361,          WRITE('Zadej reg do ktereho chces ulozit hodnotu: ')
+LINENO   55,1443,          IF UNINIT(user_input) THEN user_input = 55; ENDIF
+LINENO   55,1443,          IF UNINIT(user_input) THEN user_input = 55; ENDIF
+LINENO   55,1443,          IF UNINIT(user_input) THEN user_input = 55; ENDIF
+LINENO   56,1498,          SET_INT_REG(user_input, my_int, status)
+LINENO   57,1543,          IF status <> 0 THEN
+LINENO   58,1568,              POST_ERR(status, '', 0, 2)
+LINENO   59,1604,          ENDIF
+LINENO   61,1684,          WRITE('Var uninit: ', var_uninit, CR)
+LINENO   62,1727,      END progr_test_1

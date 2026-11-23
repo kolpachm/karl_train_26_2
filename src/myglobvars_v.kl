@@ -1,0 +1,6 @@
+VAR
+--volatile
+my_int IN DRAM FROM my_global    : INTEGER
+--non volatile
+param1 IN CMOS FROM my_global    : INTEGER
+param2 IN SHADOW FROM my_global  : INTEGER

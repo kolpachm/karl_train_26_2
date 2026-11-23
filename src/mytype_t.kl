@@ -1,0 +1,6 @@
+TYPE
+    my_type FROM progr_test_1 = STRUCTURE
+        my_field : INTEGER
+        a:REAL 
+        b:REAL
+    ENDSTRUCTURE
