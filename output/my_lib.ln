@@ -1,0 +1,30 @@
+
+LINENO   24,765,      END my_lib
+LINENO   28,803,          x_ = x_ * x_
+LINENO   29,821,      END square
+LINENO   32,862,          WRITE screen_f(CHR(cc_clear_win),CHR(cc_home))
+LINENO   33,914,      END clear_screen
+LINENO   64,1951,          GET_TPE_PRM(param_no, data_type, int_value, real_value, str_value, status)
+LINENO   65,2031,          IF status <> 0 THEN
+LINENO   66,2056,              POST_ERR(status, '', 0, 2)
+LINENO   67,2092,              RETURN (0)
+LINENO   68,2112,          ENDIF
+LINENO   69,2123,          IF data_type = TYP_INT THEN
+LINENO   70,2156,              RETURN (int_value)
+LINENO   71,2184,          ELSE
+LINENO   72,2194,              POST_ERR(12240, '', 0, 2)
+LINENO   73,2229,              RETURN (0) -- or some appropriate error value
+LINENO   74,2284,          ENDIF
+LINENO   75,2295,      END GetIntParam
+LINENO   104,3195,          GET_TPE_PRM(param_no, data_type, int_value, real_value, str_value, status)
+LINENO   105,3275,          IF status <> 0 THEN
+LINENO   106,3300,              POST_ERR(status, '', 0, 2)
+LINENO   107,3336,              RETURN (0)
+LINENO   108,3356,          ENDIF
+LINENO   109,3367,          SELECT data_type OF
+LINENO   111,3417,                  RETURN (real_value)
+LINENO   113,3474,                  RETURN(int_value)
+LINENO   115,3520,                  POST_ERR(12240, '', 0, 2)
+LINENO   116,3559,                  RETURN (0) -- or some appropriate error value
+LINENO   117,3618,          ENDSELECT
+LINENO   118,3633,      END GetRealParam

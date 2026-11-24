@@ -1,6 +1,15 @@
 PROGRAM new_prog
+%COMMENT = 'v0.1'
+%NOLOCKGROUP
 
+VAR 
+    x : REAL
+
+%INCLUDE my_lib_h
 BEGIN
 	WRITE('new prog',CR)
-	
+	clear_screen(TPERROR) 
+	x = 5
+	square(x)
+	WRITE('x squared: ', x, CR)
 END new_prog

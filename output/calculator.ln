@@ -1,0 +1,57 @@
+
+LINENO   54,1426,          operation = 0
+LINENO   56,1464,          CONDITION[1]:
+LINENO   69,1849,          clear_screen(TPERROR)
+LINENO   70,1876,          FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
+LINENO   72,1935,          WRITE TPERROR('Welcome to the amazing calculator!')
+LINENO   74,1994,          WHILE (operation <> OP_EXIT) DO
+LINENO   75,2031,              operation = 0
+LINENO   76,2054,              clear_screen(TPDISPLAY)
+LINENO   77,2087,              clear_screen(TPFUNC)
+LINENO   79,2149,              WRITE TPDISPLAY('Enter first number: ')
+LINENO   80,2198,              READ TPDISPLAY(num1)
+LINENO   82,2258,              WRITE TPDISPLAY('Enter second number: ')
+LINENO   83,2308,              READ TPDISPLAY(num2)
+LINENO   84,2338,              WRITE TPFUNC('  ADD    SUB    MUL     DIV      SQUARE  ')
+LINENO   85,2405,              ENABLE CONDITION[1]
+LINENO   86,2434,              WAIT FOR (operation <> 0)
+LINENO   88,2501,              result = calc(num1,num2,operation,status)
+LINENO   89,2552,              IF (status <> 0) THEN
+LINENO   90,2583,                  WRITE TPDISPLAY('Calculation error, status: ', status, CR)
+LINENO   91,2655,                  operation = OP_EXIT
+LINENO   92,2688,              ENDIF
+LINENO   94,2731,              IF (operation <> OP_EXIT) THEN
+LINENO   95,2771,                  WRITE TPDISPLAY('Result: ', result::10::2,CR)
+LINENO   96,2830,                  WRITE TPDISPLAY(CR)
+LINENO   97,2863,                  WRITE TPDISPLAY('Continue? Y/N',CR)
+LINENO   98,2912,                  READ TPDISPLAY(cont)
+LINENO   99,2946,                  IF ((cont = 'N') OR (cont = 'n')) THEN
+LINENO   100,2998,                      operation = OP_EXIT 
+LINENO   101,3036,                  ENDIF
+LINENO   102,3055,              ENDIF
+LINENO   103,3070,               continue_::
+LINENO   104,3092,          ENDWHILE
+LINENO   105,3106,          clear_screen(TPDISPLAY)
+LINENO   106,3135,          clear_screen(TPERROR)
+LINENO   107,3162,          clear_screen(TPFUNC)
+LINENO   108,3188,          WRITE TPDISPLAY('Thank you for using the calculator!',CR)
+LINENO   111,3255,      END calculator
+LINENO   117,3383,          status_ = 0
+LINENO   118,3400,          SELECT ope_ OF
+LINENO   120,3443,                  result_ = num1_ + num2_
+LINENO   122,3503,                  result_ = num1_ - num2_
+LINENO   124,3563,                  result_ = num1_ * num2_
+LINENO   126,3623,                  IF (num2_ <> 0) THEN
+LINENO   127,3657,                      result_ = num1_ / num2_
+LINENO   128,3698,                  ELSE
+LINENO   129,3716,                      WRITE TPDISPLAY('Error: Division by zero!')
+LINENO   130,3777,                      result_ = 0
+LINENO   131,3806,                      status_ = -1
+LINENO   132,3836,                  ENDIF
+LINENO   134,3881,                  square(num1_)
+LINENO   135,3908,                  result_ = num1_
+LINENO   137,3952,                      result_ =  0
+LINENO   138,3982,                      status_ = -2
+LINENO   139,4012,          ENDSELECT
+LINENO   140,4027,          RETURN (result_)
+LINENO   141,4049,      END calc

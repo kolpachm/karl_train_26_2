@@ -1,0 +1,4 @@
+ROUTINE square(x_ : REAL) FROM my_lib
+ROUTINE clear_screen(screen_f:FILE) FROM my_lib
+ROUTINE GetIntParam(param_no : INTEGER) : INTEGER FROM my_lib
+ROUTINE GetRealParam(param_no : INTEGER) : REAL FROM my_lib

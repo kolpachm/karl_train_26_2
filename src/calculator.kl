@@ -11,7 +11,7 @@ PROGRAM calculator
 -- Last modified: 2026-11-24
 -- Last modified by: msk
 ----------------------------------------------------
-%COMMENT = 'v0.4'
+%COMMENT = 'v0.7'
 --%ALPHABETIZE
 %NOLOCKGROUP
 %NOBUSYLAMP
@@ -30,6 +30,7 @@ CONST
     OP_SUB          = 2
     OP_MUL          = 3
     OP_DIV          = 4
+    OP_SQUARE       = 5
     OP_EXIT         = 99
 --TYPE
 VAR
@@ -38,9 +39,13 @@ num1            : REAL
 num2            : REAL
 result          : REAL
 cont            :STRING[1]
+status          : INTEGER
 ----------------------------------------------------
 -- ROUTINE DECL
 ----------------------------------------------------
+%INCLUDE my_lib_h
+ROUTINE calc(num1_:REAL; num2_:REAL; ope_:INTEGER;status_:INTEGER):REAL FROM calculator
+
 ----------------------------------------------------
 -- BEGIN calculator
 ----------------------------------------------------
@@ -58,45 +63,33 @@ BEGIN
         WHEN TPIN[ky_f4]+ DO
             operation = OP_DIV
         WHEN TPIN[ky_f5]+ DO
-            operation = OP_EXIT
+            operation = OP_SQUARE
     ENDCONDITION 
     -- force & clear user screen
-    WRITE TPERROR(CHR(cc_clear_win),CHR(cc_home))
+    clear_screen(TPERROR)
     FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
     -- welcome
     WRITE TPERROR('Welcome to the amazing calculator!')
 
     WHILE (operation <> OP_EXIT) DO
         operation = 0
-        WRITE TPDISPLAY(CHR(cc_clear_win),CHR(cc_home))
-        WRITE TPFUNC(CHR(cc_clear_win),CHR(cc_home))
+        clear_screen(TPDISPLAY)
+        clear_screen(TPFUNC)
          -- ask user for num1 
         WRITE TPDISPLAY('Enter first number: ')
         READ TPDISPLAY(num1)
         -- ask user for num2
         WRITE TPDISPLAY('Enter second number: ')
         READ TPDISPLAY(num2)
-        WRITE TPFUNC('  ADD    SUB    MUL     DIV      EXIT  ')
+        WRITE TPFUNC('  ADD    SUB    MUL     DIV      SQUARE  ')
         ENABLE CONDITION[1]
         WAIT FOR (operation <> 0)
         -- perform calculation
-        SELECT operation OF
-            CASE(OP_ADD):
-                result = num1 + num2
-            CASE(OP_SUB):
-                result = num1 - num2
-            CASE(OP_MUL):
-                result = num1 * num2
-            CASE(OP_DIV):
-                IF (num2 <> 0) THEN
-                    result = num1 / num2
-                ELSE
-                    WRITE TPDISPLAY('Error: Division by zero!')
-                ENDIF
-            ELSE:
-                -- exit or invalid operation
-                GOTO continue_
-        ENDSELECT
+        result = calc(num1,num2,operation,status)
+        IF (status <> 0) THEN
+            WRITE TPDISPLAY('Calculation error, status: ', status, CR)
+            operation = OP_EXIT
+        ENDIF
          -- display result
         IF (operation <> OP_EXIT) THEN
             WRITE TPDISPLAY('Result: ', result::10::2,CR)
@@ -109,10 +102,40 @@ BEGIN
         ENDIF
          continue_::
     ENDWHILE
-    WRITE (CHR(128),CHR(137))
-    WRITE TPERROR(CHR(128),CHR(137))
-    WRITE TPFUNC(CHR(128),CHR(137))
+    clear_screen(TPDISPLAY)
+    clear_screen(TPERROR)
+    clear_screen(TPFUNC)
     WRITE TPDISPLAY('Thank you for using the calculator!',CR)
 
 
 END calculator
+--============================================================
+ROUTINE calc
+VAR 
+    result_ : REAL
+BEGIN 
+    status_ = 0
+    SELECT ope_ OF
+        CASE(OP_ADD):
+            result_ = num1_ + num2_
+        CASE(OP_SUB):
+            result_ = num1_ - num2_
+        CASE(OP_MUL):
+            result_ = num1_ * num2_
+        CASE(OP_DIV):
+            IF (num2_ <> 0) THEN
+                result_ = num1_ / num2_
+            ELSE
+                WRITE TPDISPLAY('Error: Division by zero!')
+                result_ = 0
+                status_ = -1
+            ENDIF
+        CASE(OP_SQUARE):
+            square(num1_)
+            result_ = num1_
+        ELSE:
+                result_ =  0
+                status_ = -2
+    ENDSELECT
+    RETURN (result_)
+END calc

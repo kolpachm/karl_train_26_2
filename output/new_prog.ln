@@ -1,0 +1,7 @@
+
+LINENO   10,101,       WRITE('new prog',CR)
+LINENO   11,124,       clear_screen(TPERROR) 
+LINENO   12,149,       x = 5
+LINENO   13,157,       square(x)
+LINENO   14,169,       WRITE('x squared: ', x, CR)
+LINENO   15,199,      END new_prog

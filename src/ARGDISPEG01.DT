@@ -1,0 +1,8 @@
+[PROGRAM]
+NAME = "GONIO"
+ARGUMENT = '3'
+[ARGUMENT]
+V01 = "SIN":'1', "COS":'2', "TAN":'3'
+N02 = "Argument":'0'
+N03 = "ResRidx":'10'
+[ENDPROGRAM]

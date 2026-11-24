@@ -1,0 +1,15 @@
+
+LINENO   54,1552,          func     = GetIntParam(1)
+LINENO   55,1583,          arg      = GetRealParam(2)
+LINENO   56,1615,          outRIdx  = GetIntParam(3)
+LINENO   58,1648,          SELECT func OF
+LINENO   60,1692,                  result = SIN(arg)
+LINENO   62,1747,                  result = COS(arg)
+LINENO   64,1802,                  result = TAN(arg)
+LINENO   66,1848,                  POST_ERR(12003, '', 0, 2) -- unknown function
+LINENO   67,1907,          ENDSELECT
+LINENO   70,1981,          SET_REAL_REG(outRIdx, result, status)
+LINENO   71,2024,          IF status <> 0 THEN
+LINENO   72,2049,              POST_ERR(status, '', 0, 2)
+LINENO   73,2085,          ENDIF
+LINENO   74,2096,      END gonio 

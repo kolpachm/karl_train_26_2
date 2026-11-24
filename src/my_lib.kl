@@ -1,0 +1,118 @@
+PROGRAM my_lib
+----------------------------------------------------
+-- Creation date: 2026-11-24
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-24
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.1'
+%INCLUDE KLEVCCDF
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+----------------------------------------------------
+-- BEGIN my_lib
+----------------------------------------------------
+BEGIN
+END my_lib
+
+ROUTINE square
+BEGIN 
+    x_ = x_ * x_
+END square
+ROUTINE clear_screen
+BEGIN
+    WRITE screen_f(CHR(cc_clear_win),CHR(cc_home))
+END clear_screen
+---------------------------------------------------
+-- Handling TPP parameters
+---------------------------------------------------
+ROUTINE GetIntParam
+----------------------------------------------------
+-- Creation date: 2026.11.24
+-- Created by: 
+----------------------------------------------------
+-- Function: returns int TPP parameter value based on param_no
+----------------------------------------------------
+-- Arguments: 
+--   param_no : INTEGER - the parameter number to retrieve
+----------------------------------------------------
+-- Return value: 
+--   INTEGER - the integer value of the specified TPP parameter
+----------------------------------------------------
+-- Last modified: 2026.11.24
+-- Last modified by: 
+----------------------------------------------------
+CONST
+    TYP_INT     = 1
+    TYP_REAL    = 2
+    TYP_STRING  = 3
+VAR
+    data_type   : INTEGER
+    int_value   : INTEGER
+    real_value  : REAL
+    str_value   : STRING[1]
+    status      : INTEGER
+BEGIN
+    GET_TPE_PRM(param_no, data_type, int_value, real_value, str_value, status)
+    IF status <> 0 THEN
+        POST_ERR(status, '', 0, 2)
+        RETURN (0)
+    ENDIF
+    IF data_type = TYP_INT THEN
+        RETURN (int_value)
+    ELSE
+        POST_ERR(12240, '', 0, 2)
+        RETURN (0) -- or some appropriate error value
+    ENDIF
+END GetIntParam
+
+ROUTINE GetRealParam
+----------------------------------------------------
+-- Creation date: 2026.11.24
+-- Created by: 
+----------------------------------------------------
+-- Function: returns real TPP parameter value based on param_no
+----------------------------------------------------
+-- Arguments: 
+--   param_no : INTEGER - the parameter number to retrieve
+----------------------------------------------------
+-- Return value: 
+--   REAL - the real value of the specified TPP parameter
+----------------------------------------------------
+-- Last modified: 2026.11.24
+-- Last modified by: 
+----------------------------------------------------
+CONST
+    TYP_INT     = 1
+    TYP_REAL    = 2
+    TYP_STRING  = 3
+VAR
+    data_type   : INTEGER
+    int_value   : INTEGER
+    real_value  : REAL
+    str_value   : STRING[1]
+    status      : INTEGER
+BEGIN
+    GET_TPE_PRM(param_no, data_type, int_value, real_value, str_value, status)
+    IF status <> 0 THEN
+        POST_ERR(status, '', 0, 2)
+        RETURN (0)
+    ENDIF
+    SELECT data_type OF
+        CASE(TYP_REAL):
+            RETURN (real_value)
+        CASE(TYP_INT):
+            RETURN(int_value)
+        ELSE:
+            POST_ERR(12240, '', 0, 2)
+            RETURN (0) -- or some appropriate error value
+    ENDSELECT
+END GetRealParam

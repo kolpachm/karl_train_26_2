@@ -1,0 +1,74 @@
+PROGRAM gonio
+----------------------------------------------------
+-- Creation date: 2026-11-24
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: Trigonometric calculations
+----------------------------------------------------
+-- Last modified: 2026-11-24
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.0'
+%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR + COMMAND
+--%SYSTEM
+--%PRIORITY = 49
+--%INCLUDE KLEVKEYS
+--%INCLUDE KLEVKMSK
+--%INCLUDE KLEVCCDF
+--%INCLUDE KLIOUOP
+--%INCLUDE KLIOTYPS
+CONST
+ FCT_SIN   = 1
+ FCT_COS   = 2
+ FCT_TAN   = 3
+--TYPE
+VAR
+    func    : INTEGER
+    arg     : REAL
+    outRIdx : INTEGER
+    result  : REAL
+    status  : INTEGER
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+--GetStringParam(param_no : INTEGER) : STRING FROM gonio
+----------------------------------------------------
+-- BEGIN gonio
+----------------------------------------------------
+BEGIN
+    --note:
+    -- TPP program call:
+    -- CALL gonio(param21=FUNC[INT],param2=ARG[REAL],param3=ResultRegIdx[INT])
+    -- used inbuild function GET_TPE_PRM to retrieve TPP parameters
+    -- GET_TPE_PRM(param_no[in], data_type[out], int_value[out], real_value[out], str_value, status)
+
+    func     = GetIntParam(1)
+    arg      = GetRealParam(2)
+    outRIdx  = GetIntParam(3)
+
+    SELECT func OF
+        CASE(FCT_SIN):
+            result = SIN(arg)
+        CASE(FCT_COS):
+            result = COS(arg)
+        CASE(FCT_TAN):
+            result = TAN(arg)
+        ELSE:
+            POST_ERR(12003, '', 0, 2) -- unknown function
+    ENDSELECT
+    
+    --store result in the specified result register
+    SET_REAL_REG(outRIdx, result, status)
+    IF status <> 0 THEN
+        POST_ERR(status, '', 0, 2)
+    ENDIF
+END gonio 
