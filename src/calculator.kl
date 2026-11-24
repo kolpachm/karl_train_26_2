@@ -1,0 +1,118 @@
+PROGRAM calculator
+----------------------------------------------------
+-- Creation date: 2026-11-24
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-24
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.4'
+--%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+--%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+--%INCLUDE KLIOUOP
+--%INCLUDE KLIOTYPS
+CONST
+    OP_ADD          = 1
+    OP_SUB          = 2
+    OP_MUL          = 3
+    OP_DIV          = 4
+    OP_EXIT         = 99
+--TYPE
+VAR
+operation       : INTEGER
+num1            : REAL
+num2            : REAL
+result          : REAL
+cont            :STRING[1]
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+----------------------------------------------------
+-- BEGIN calculator
+----------------------------------------------------
+BEGIN
+    --init 
+    operation = 0
+    -- conditions
+    CONDITION[1]:
+        WHEN TPIN[ky_f1]+ DO
+            operation = OP_ADD
+        WHEN TPIN[ky_f2]+ DO
+            operation = OP_SUB
+        WHEN TPIN[ky_f3]+ DO
+            operation = OP_MUL
+        WHEN TPIN[ky_f4]+ DO
+            operation = OP_DIV
+        WHEN TPIN[ky_f5]+ DO
+            operation = OP_EXIT
+    ENDCONDITION 
+    -- force & clear user screen
+    WRITE TPERROR(CHR(cc_clear_win),CHR(cc_home))
+    FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
+    -- welcome
+    WRITE TPERROR('Welcome to the amazing calculator!')
+
+    WHILE (operation <> OP_EXIT) DO
+        operation = 0
+        WRITE TPDISPLAY(CHR(cc_clear_win),CHR(cc_home))
+        WRITE TPFUNC(CHR(cc_clear_win),CHR(cc_home))
+         -- ask user for num1 
+        WRITE TPDISPLAY('Enter first number: ')
+        READ TPDISPLAY(num1)
+        -- ask user for num2
+        WRITE TPDISPLAY('Enter second number: ')
+        READ TPDISPLAY(num2)
+        WRITE TPFUNC('  ADD    SUB    MUL     DIV      EXIT  ')
+        ENABLE CONDITION[1]
+        WAIT FOR (operation <> 0)
+        -- perform calculation
+        SELECT operation OF
+            CASE(OP_ADD):
+                result = num1 + num2
+            CASE(OP_SUB):
+                result = num1 - num2
+            CASE(OP_MUL):
+                result = num1 * num2
+            CASE(OP_DIV):
+                IF (num2 <> 0) THEN
+                    result = num1 / num2
+                ELSE
+                    WRITE TPDISPLAY('Error: Division by zero!')
+                ENDIF
+            ELSE:
+                -- exit or invalid operation
+                GOTO continue_
+        ENDSELECT
+         -- display result
+        IF (operation <> OP_EXIT) THEN
+            WRITE TPDISPLAY('Result: ', result::10::2,CR)
+            WRITE TPDISPLAY(CR)
+            WRITE TPDISPLAY('Continue? Y/N',CR)
+            READ TPDISPLAY(cont)
+            IF ((cont = 'N') OR (cont = 'n')) THEN
+                operation = OP_EXIT 
+            ENDIF
+        ENDIF
+         continue_::
+    ENDWHILE
+    WRITE (CHR(128),CHR(137))
+    WRITE TPERROR(CHR(128),CHR(137))
+    WRITE TPFUNC(CHR(128),CHR(137))
+    WRITE TPDISPLAY('Thank you for using the calculator!',CR)
+
+
+END calculator

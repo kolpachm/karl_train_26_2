@@ -46,7 +46,7 @@ BEGIN
 
     IF UNINIT(my_int) THEN my_int = 0; ENDIF
     IF UNINIT(var_uninit) THEN var_uninit = 0; ENDIF
-
+    --change of program
     FOR i=1 TO 5 DO
         my_int = my_int + 1 
         WRITE('My int: ', my_int,CR)
