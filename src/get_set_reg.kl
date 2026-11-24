@@ -1,0 +1,81 @@
+PROGRAM get_set_reg
+----------------------------------------------------
+-- Creation date: 2026-11-24
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.1 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-24
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.1'
+--%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR + COMMAND
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+CONST
+TYPE
+VAR
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+ROUTINE GetIntReg(reg_no):INTEGER FROM get_set_reg
+ROUTINE GetRealReg(reg_no):REAL   FROM get_set_reg
+----------------------------------------------------
+-- BEGIN get_set_reg
+----------------------------------------------------
+BEGIN
+    -- GET_REG(register_no, real_flag[out], int_value, real_value, status)
+    -- GET_STR_REG(register_no, value, status)
+    -- SET_INT_REG(register_no, int_value, status)
+    -- SET_REAL_REG(register_no, real_value, status)
+    -- POS_REG_TYPE(register_no, group_no, posn_type, num_axes, status)
+    -- GET_POS_REG(register_no, status)
+    -- GET_JPOS_REG(register_no, status)
+    -- SET_JPOS_REG(register_no, jpos, status)
+    -- SET_POS_REG(register_no, posn, status)
+END get_set_reg 
+
+ROUTINE GetIntReg
+----------------------------------------------------
+-- Creation date: 2026.11.24
+-- Created by: 
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Arguments: 
+----------------------------------------------------
+-- Return value: 
+----------------------------------------------------
+-- Last modified: 2026.11.24
+-- Last modified by: 
+----------------------------------------------------
+VAR
+    real_flag: BOOLEAN
+    int_value: INTEGER
+    real_value: REAL
+    status: INTEGER
+BEGIN
+    GET_REG(reg_no, real_flag, int_value, real_value, status)
+    IF status <> 0 THEN
+        -- Handle error
+    ENDIF
+    IF real_flag THEN
+        -- Handle unexpected real value
+        POST_ERR(12240,'',0, 2)
+    ENDIF
+    RETURN (int_value)
+END GetIntReg
