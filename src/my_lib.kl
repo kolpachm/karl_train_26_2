@@ -11,7 +11,7 @@ PROGRAM my_lib
 -- Last modified: 2026-11-24
 -- Last modified by: msk
 ----------------------------------------------------
-%COMMENT = 'v0.2'
+%COMMENT = 'v0.3'
 %INCLUDE KLEVCCDF
 ----------------------------------------------------
 -- ROUTINE DECL
@@ -258,3 +258,55 @@ BEGIN
   s_ = SUB_STR(s_,2,STR_LEN(s_)) -- Remove leading blank character
   RETURN (s_)
 END int2str 
+
+ROUTINE GetTppFrmData--(frame_no : INTEGER) : POSITION FROM my_lib
+    VAR 
+    max_num_frm :INTEGER
+    ret_value   :POSITION
+    status      :INTEGER
+    entry       :INTEGER
+    BEGIN 
+        max_num_frm = $SCR.$MAXNUMUFRAM 
+        IF (frame_no > 0) AND (frame_no <= max_num_frm) THEN
+            GET_VAR(entry, '*SYSTEM*', '$MNUFRAME[1,' + int2str(frame_no) + ']', ret_value, status)
+            IF status <> 0 THEN
+                -- Handle error
+                POST_ERR(status,'',0, 2)
+            ENDIF 
+            RETURN(ret_value)
+        ENDIF 
+        IF (frame_no = 0) THEN 
+            ret_value = $MOR_GRP[1].$NILPOS
+            RETURN(ret_value)
+        ENDIF
+        IF (frame_no < 0) OR (frame_no > max_num_frm) THEN
+            -- Handle invalid frame number
+            POST_ERR(16107,'',0, 2)
+        ENDIF
+END GetTppFrmData
+
+ROUTINE GetTppToolData--(tool_no : INTEGER) : POSITION FROM my_lib
+    VAR 
+    max_num_tool :INTEGER
+    ret_value   :POSITION
+    status      :INTEGER
+    entry       :INTEGER
+    BEGIN 
+        max_num_tool = $SCR.$MAXNUMUTOOL 
+        IF (tool_no > 0) AND (tool_no <= max_num_tool) THEN
+            GET_VAR(entry, '*SYSTEM*', '$MNUTOOL[1,' + int2str(tool_no) + ']', ret_value, status)
+            IF status <> 0 THEN
+                -- Handle error
+                POST_ERR(status,'',0, 2)
+            ENDIF 
+            RETURN(ret_value)
+        ENDIF 
+        IF tool_no = 0 THEN 
+            ret_value = $MOR_GRP[1].$NILPOS
+            RETURN(ret_value)
+        ENDIF
+        IF (tool_no < 0) OR (tool_no > max_num_tool) THEN
+            -- Handle invalid tool number
+        POST_ERR(16107,'',0, 2)
+    ENDIF
+END GetTppToolData

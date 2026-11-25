@@ -1,0 +1,39 @@
+
+LINENO   61,1870,          GET_VAR(entry, '*SYSTEM*', '$MNUTOOLNUM[1]', tpp_tool_num, status)
+LINENO   62,1942,          IF status <> 0 THEN
+LINENO   63,1967,              WRITE('Error getting tool number: ', status)
+LINENO   64,2021,              POST_ERR(status, '', 0, 2)
+LINENO   65,2057,              RETURN
+LINENO   66,2073,          ENDIF
+LINENO   67,2084,          GET_VAR(entry, '*SYSTEM*', '$MNUFRAMENUM[1]', tpp_frame_num, status)
+LINENO   68,2158,          IF status <> 0 THEN
+LINENO   69,2183,              WRITE('Error getting frame number: ', status)
+LINENO   70,2238,              POST_ERR(status, '', 0, 2)
+LINENO   71,2274,              RETURN
+LINENO   72,2290,          ENDIF
+LINENO   74,2326,          str_var_name = '$MNUTOOL[1,' + int2str(tpp_tool_num) + ']'
+LINENO   75,2390,          GET_VAR(entry, '*SYSTEM*', str_var_name, tpp_tool_data, status)
+LINENO   76,2459,          IF status <> 0 THEN
+LINENO   77,2484,              WRITE('Error getting tool data: ', status)
+LINENO   78,2536,              POST_ERR(status, '', 0, 2)
+LINENO   79,2572,              RETURN
+LINENO   80,2588,          ENDIF
+LINENO   82,2623,          IF tpp_frame_num > 0 THEN
+LINENO   83,2654,              str_var_name = '$MNUFRAME[1,' + int2str(tpp_frame_num) + ']'
+LINENO   84,2724,              GET_VAR(entry, '*SYSTEM*', str_var_name, tpp_frame_data, status)
+LINENO   85,2798,              IF status <> 0 THEN
+LINENO   86,2827,                  WRITE('Error getting frame data: ', status)
+LINENO   87,2884,                  POST_ERR(status, '', 0, 2)
+LINENO   88,2924,                  RETURN
+LINENO   89,2944,              ENDIF
+LINENO   90,2959,          ELSE
+LINENO   91,2969,              tpp_frame_data = $MOR_GRP[1].$NILPOS
+LINENO   92,3015,          ENDIF
+LINENO   94,3076,          $GROUP[1].$UTOOL = tpp_tool_data
+LINENO   95,3114,          $GROUP[1].$UFRAME = tpp_frame_data
+LINENO   97,3176,          act_pos = CURPOS(0,0)
+LINENO   98,3203,          clear_screen(TPDISPLAY)
+LINENO   99,3232,          WRITE('Actual position: ',CR)
+LINENO   100,3267,          WRITE('X: ', act_pos.X::9::3, ' Y: ', act_pos.Y::9::3, ' Z: ', act_pos.Z::9::3,CR)
+LINENO   101,3355,          WRITE('W: ', act_pos.W::9::3, ' P: ', act_pos.P::9::3, ' R: ', act_pos.R::9::3, CR)
+LINENO   102,3444,      END pos_manip
