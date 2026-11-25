@@ -1,0 +1,75 @@
+PROGRAM file_manip
+----------------------------------------------------
+-- Creation date: 2026-11-25
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.1 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-25
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.2'
+--%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+CONST
+ FILE_PATH = 'FR:my_log.dt'
+--TYPE
+VAR
+ F : FILE
+ status : INTEGER
+ log_str : STRING[254]
+ i      :INTEGER
+ time_int : INTEGER
+ 
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+----------------------------------------------------
+-- BEGIN file_manip
+----------------------------------------------------
+BEGIN
+    CLR_IO_STAT(F)
+    OPEN FILE F('AP', FILE_PATH)
+    status = IO_STATUS(F)
+    IF status <> 0 THEN
+        clear_screen(TPERROR)
+        WRITE TPERROR('Error opening file: ', status, CR)
+        RETURN
+    ENDIF 
+    -- File opened successfully, proceed with further operations here
+    -- write to file: 
+    WRITE F('This is a test log entry.', CR)
+    status = IO_STATUS(F)
+    IF status <> 0 THEN
+        clear_screen(TPERROR)
+        WRITE TPERROR('Error writing to file: ', status, CR)
+        RETURN
+    ENDIF
+    FOR i=1 TO 20 DO
+        log_str = ''
+        GET_TIME(time_int)
+        CNV_TIME_STR(time_int, log_str)
+        log_str = log_str + ' - My i value is: ' + int2str(i)
+        DELAY 1000
+        WRITE F(log_str,CR)
+    ENDFOR 
+    clear_screen(TPERROR)
+    WRITE TPERROR('Log completed successfully.', CR)
+    CLOSE FILE F
+
+END file_manip

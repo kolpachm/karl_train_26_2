@@ -1,0 +1,28 @@
+
+LINENO   46,1136,          CLR_IO_STAT(F)
+LINENO   47,1156,          OPEN FILE F('AP', FILE_PATH)
+LINENO   48,1190,          status = IO_STATUS(F)
+LINENO   49,1217,          IF status <> 0 THEN
+LINENO   50,1242,              clear_screen(TPERROR)
+LINENO   51,1273,              WRITE TPERROR('Error opening file: ', status, CR)
+LINENO   52,1332,              RETURN
+LINENO   53,1348,          ENDIF 
+LINENO   56,1455,          WRITE F('This is a test log entry.', CR)
+LINENO   57,1501,          status = IO_STATUS(F)
+LINENO   58,1528,          IF status <> 0 THEN
+LINENO   59,1553,              clear_screen(TPERROR)
+LINENO   60,1584,              WRITE TPERROR('Error writing to file: ', status, CR)
+LINENO   61,1646,              RETURN
+LINENO   62,1662,          ENDIF
+LINENO   63,1673,          FOR i=1 TO 20 DO
+LINENO   64,1695,              log_str = ''
+LINENO   65,1717,              GET_TIME(time_int)
+LINENO   66,1745,              CNV_TIME_STR(time_int, log_str)
+LINENO   67,1786,              log_str = log_str + ' - My i value is: ' + int2str(i)
+LINENO   68,1849,              DELAY 1000
+LINENO   69,1869,              WRITE F(log_str,CR)
+LINENO   70,1898,          ENDFOR 
+LINENO   71,1911,          clear_screen(TPERROR)
+LINENO   72,1938,          WRITE TPERROR('Log completed successfully.', CR)
+LINENO   73,1992,          CLOSE FILE F
+LINENO   75,2012,      END file_manip
