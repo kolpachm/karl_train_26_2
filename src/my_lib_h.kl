@@ -2,3 +2,8 @@ ROUTINE square(x_ : REAL) FROM my_lib
 ROUTINE clear_screen(screen_f:FILE) FROM my_lib
 ROUTINE GetIntParam(param_no : INTEGER) : INTEGER FROM my_lib
 ROUTINE GetRealParam(param_no : INTEGER) : REAL FROM my_lib
+ROUTINE GetIntReg(reg_no:INTEGER):INTEGER FROM my_lib
+ROUTINE GetRealReg(reg_no:INTEGER):REAL   FROM my_lib
+-- optional
+ROUTINE SetNumReg(reg_no:INTEGER;value:REAL):INTEGER FROM my_lib
+ROUTINE GetCartPosReg(reg_no:INTEGER):XYZWPREXT FROM my_lib

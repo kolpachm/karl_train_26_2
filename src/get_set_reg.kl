@@ -11,7 +11,7 @@ PROGRAM get_set_reg
 -- Last modified: 2026-11-24
 -- Last modified by: msk
 ----------------------------------------------------
-%COMMENT = 'v0.1'
+%COMMENT = 'v0.3'
 --%ALPHABETIZE
 %NOLOCKGROUP
 %NOBUSYLAMP
@@ -25,15 +25,18 @@ PROGRAM get_set_reg
 %INCLUDE KLEVCCDF
 %INCLUDE KLIOUOP
 %INCLUDE KLIOTYPS
-CONST
-TYPE
-VAR
+--CONST
+--TYPE
+VAR 
+    reg_no: INTEGER
+    pos_retrieved: XYZWPREXT
+    cfg : CONFIG
+    cfg_str: STRING[32]
 ----------------------------------------------------
 -- ROUTINE DECL
 ----------------------------------------------------
 %INCLUDE my_lib_h
-ROUTINE GetIntReg(reg_no):INTEGER FROM get_set_reg
-ROUTINE GetRealReg(reg_no):REAL   FROM get_set_reg
+
 ----------------------------------------------------
 -- BEGIN get_set_reg
 ----------------------------------------------------
@@ -47,35 +50,19 @@ BEGIN
     -- GET_JPOS_REG(register_no, status)
     -- SET_JPOS_REG(register_no, jpos, status)
     -- SET_POS_REG(register_no, posn, status)
+    clear_screen(TPDISPLAY)
+    WRITE('Zadej cislo registru: ')
+    READ(reg_no)
+    WRITE(CR, 'Hodnote registru R[', reg_no, ']: ', GetRealReg(reg_no),CR)
+    WRITE('Zadej cislo poz. registru: ')
+    READ(reg_no)
+    pos_retrieved = GetCartPosReg(reg_no)
+    --IF NOT UNINIT(pos_retrieved)
+    -- -9999.999
+    WRITE(CR,'X: ', pos_retrieved.x::9::3, ' Y: ', pos_retrieved.y::9::3, ' Z: ', pos_retrieved.z::9::3,CR) 
+    WRITE(' W: ', pos_retrieved.w::9::3,' P: ', pos_retrieved.p::9::3,' R: ', pos_retrieved.r::9::3, CR)
+    CNV_CONF_STR(pos_retrieved.config_data, cfg_str)
+    WRITE(' Config: ', cfg_str, CR)
+
 END get_set_reg 
 
-ROUTINE GetIntReg
-----------------------------------------------------
--- Creation date: 2026.11.24
--- Created by: 
-----------------------------------------------------
--- Function: 
-----------------------------------------------------
--- Arguments: 
-----------------------------------------------------
--- Return value: 
-----------------------------------------------------
--- Last modified: 2026.11.24
--- Last modified by: 
-----------------------------------------------------
-VAR
-    real_flag: BOOLEAN
-    int_value: INTEGER
-    real_value: REAL
-    status: INTEGER
-BEGIN
-    GET_REG(reg_no, real_flag, int_value, real_value, status)
-    IF status <> 0 THEN
-        -- Handle error
-    ENDIF
-    IF real_flag THEN
-        -- Handle unexpected real value
-        POST_ERR(12240,'',0, 2)
-    ENDIF
-    RETURN (int_value)
-END GetIntReg

@@ -1,0 +1,13 @@
+
+LINENO   53,1603,          clear_screen(TPDISPLAY)
+LINENO   54,1632,          WRITE('Zadej cislo registru: ')
+LINENO   55,1669,          READ(reg_no)
+LINENO   56,1687,          WRITE(CR, 'Hodnote registru R[', reg_no, ']: ', GetRealReg(reg_no),CR)
+LINENO   57,1763,          WRITE('Zadej cislo poz. registru: ')
+LINENO   58,1805,          READ(reg_no)
+LINENO   59,1823,          pos_retrieved = GetCartPosReg(reg_no)
+LINENO   62,1920,          WRITE(CR,'X: ', pos_retrieved.x::9::3, ' Y: ', pos_retrieved.y::9::3, ' Z: ', pos_retrieved.z::9::3,CR) 
+LINENO   63,2030,          WRITE(' W: ', pos_retrieved.w::9::3,' P: ', pos_retrieved.p::9::3,' R: ', pos_retrieved.r::9::3, CR)
+LINENO   64,2136,          CNV_CONF_STR(pos_retrieved.config_data, cfg_str)
+LINENO   65,2190,          WRITE(' Config: ', cfg_str, CR)
+LINENO   67,2229,      END get_set_reg 

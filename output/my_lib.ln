@@ -28,3 +28,39 @@ LINENO   115,3520,                  POST_ERR(12240, '', 0, 2)
 LINENO   116,3559,                  RETURN (0) -- or some appropriate error value
 LINENO   117,3618,          ENDSELECT
 LINENO   118,3633,      END GetRealParam
+LINENO   140,4249,          GET_REG(reg_no, real_flag, int_value, real_value, status)
+LINENO   141,4312,          IF status <> 0 THEN
+LINENO   143,4362,              POST_ERR(status,'',0, 2)
+LINENO   144,4396,          ENDIF
+LINENO   145,4407,          IF real_flag THEN
+LINENO   147,4471,              POST_ERR(12240,'',0, 2)
+LINENO   148,4504,          ENDIF
+LINENO   149,4515,          RETURN (int_value)
+LINENO   150,4539,      END GetIntReg
+LINENO   172,5153,          GET_REG(reg_no, real_flag, int_value, real_value, status)
+LINENO   173,5216,          IF status <> 0 THEN
+LINENO   175,5266,              POST_ERR(status,'',0, 2)
+LINENO   176,5300,          ENDIF
+LINENO   177,5311,          IF NOT real_flag THEN
+LINENO   179,5382,              RETURN (int_value)
+LINENO   180,5410,          ENDIF
+LINENO   181,5421,          RETURN (real_value)
+LINENO   182,5446,      END GetRealReg
+LINENO   201,5988,          SET_REAL_REG(reg_no, value, status)
+LINENO   202,6029,          IF status <> 0 THEN
+LINENO   204,6079,              POST_ERR(status,'',0, 2)
+LINENO   205,6113,          ENDIF
+LINENO   206,6124,      END SetNumReg
+LINENO   233,6848,          POS_REG_TYPE(reg_no, 1, posn_type, num_axes, status)
+LINENO   234,6906,          IF status <> 0 THEN
+LINENO   236,6956,              POST_ERR(status,'',0, 2)
+LINENO   237,6990,          ENDIF
+LINENO   238,7001,          SELECT posn_type OF
+LINENO   240,7072,                  ret_value = GET_POS_REG(reg_no, status)
+LINENO   241,7125,                  IF status <> 0  THEN
+LINENO   243,7192,                      POST_ERR(status,'',0, 2)
+LINENO   244,7234,                  ENDIF
+LINENO   247,7317,                  POST_ERR(16060,'',0, 2)
+LINENO   248,7354,          ENDSELECT
+LINENO   249,7369,          RETURN(ret_value)
+LINENO   251,7398,      END GetCartPosReg

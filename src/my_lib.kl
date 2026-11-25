@@ -11,7 +11,7 @@ PROGRAM my_lib
 -- Last modified: 2026-11-24
 -- Last modified by: msk
 ----------------------------------------------------
-%COMMENT = 'v0.1'
+%COMMENT = 'v0.2'
 %INCLUDE KLEVCCDF
 ----------------------------------------------------
 -- ROUTINE DECL
@@ -116,3 +116,136 @@ BEGIN
             RETURN (0) -- or some appropriate error value
     ENDSELECT
 END GetRealParam
+
+ROUTINE GetIntReg
+----------------------------------------------------
+-- Creation date: 2026.11.24
+-- Created by: 
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Arguments: 
+----------------------------------------------------
+-- Return value: 
+----------------------------------------------------
+-- Last modified: 2026.11.24
+-- Last modified by: 
+----------------------------------------------------
+VAR
+    real_flag: BOOLEAN
+    int_value: INTEGER
+    real_value: REAL
+    status: INTEGER
+BEGIN
+    GET_REG(reg_no, real_flag, int_value, real_value, status)
+    IF status <> 0 THEN
+        -- Handle error
+        POST_ERR(status,'',0, 2)
+    ENDIF
+    IF real_flag THEN
+        -- Handle unexpected real value
+        POST_ERR(12240,'',0, 2)
+    ENDIF
+    RETURN (int_value)
+END GetIntReg
+
+ROUTINE GetRealReg
+----------------------------------------------------
+-- Creation date: 2026.11.25
+-- Created by: 
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Arguments: 
+----------------------------------------------------
+-- Return value: 
+----------------------------------------------------
+-- Last modified: 2026.11.25
+-- Last modified by: 
+----------------------------------------------------
+VAR
+    real_flag: BOOLEAN
+    int_value: INTEGER
+    real_value: REAL
+    status: INTEGER
+BEGIN
+    GET_REG(reg_no, real_flag, int_value, real_value, status)
+    IF status <> 0 THEN
+        -- Handle error
+        POST_ERR(status,'',0, 2)
+    ENDIF
+    IF NOT real_flag THEN
+        -- Handle unexpected integer value
+        RETURN (int_value)
+    ENDIF
+    RETURN (real_value)
+END GetRealReg
+
+ROUTINE SetNumReg
+----------------------------------------------------
+-- Creation date: 2026.11.25
+-- Created by: 
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Arguments: 
+----------------------------------------------------
+-- Return value: 
+----------------------------------------------------
+-- Last modified: 2026.11.25
+-- Last modified by: 
+----------------------------------------------------
+VAR
+ status : INTEGER
+BEGIN
+    SET_REAL_REG(reg_no, value, status)
+    IF status <> 0 THEN
+        -- Handle error
+        POST_ERR(status,'',0, 2)
+    ENDIF
+END SetNumReg
+
+ROUTINE GetCartPosReg
+----------------------------------------------------
+-- Creation date: 2026.11.25
+-- Created by: 
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Arguments: 
+----------------------------------------------------
+-- Return value: 
+----------------------------------------------------
+-- Last modified: 2026.11.25
+-- Last modified by: 
+----------------------------------------------------
+CONST 
+    TYP_POS     = 1
+    TYP_XYZWPR  = 2
+    TYP_XYXEXT  = 6
+    TYP_JOINT   = 9
+VAR
+    posn_type   :INTEGER
+    num_axes    :INTEGER
+    status      :INTEGER
+    ret_value   :XYZWPREXT
+BEGIN
+    POS_REG_TYPE(reg_no, 1, posn_type, num_axes, status)
+    IF status <> 0 THEN
+        -- Handle error
+        POST_ERR(status,'',0, 2)
+    ENDIF
+    SELECT posn_type OF
+        CASE(TYP_POS,TYP_XYZWPR,TYP_XYXEXT):
+            ret_value = GET_POS_REG(reg_no, status)
+            IF status <> 0  THEN
+                -- Handle error
+                POST_ERR(status,'',0, 2)
+            ENDIF
+        ELSE:
+            -- Handle unsupported position type
+            POST_ERR(16060,'',0, 2)
+    ENDSELECT
+    RETURN(ret_value)
+    
+END GetCartPosReg
