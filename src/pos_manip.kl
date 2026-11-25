@@ -1,0 +1,87 @@
+PROGRAM pos_manip
+----------------------------------------------------
+-- Creation date: 2026-11-25
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   1.0 - first release
+----------------------------------------------------
+-- Function: get tpp user frame and tool and convert posiational 
+-- data 
+-- goal: read sys vars and use them
+----------------------------------------------------
+-- Last modified: 2026-11-25
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v1.0'
+--%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+--CONST
+--TYPE
+VAR 
+ tpp_tool_num   : INTEGER   -- $MNUTOOLNUM
+ str_var_name   : STRING[32]
+ tpp_frame_num  : INTEGER   -- $MNUFRAMENUM
+ tpp_tool_data  : POSITION  --/XYZWPR : $MNUTOOL[*group*,*tpp_tool_num*]
+ tpp_frame_data : POSITION  --/XYZWPR : $MNUFRAME[*group*,*tpp_frame_num*]
+ krl_tool_data  : POSITION  --/XYZWPR : $GROUP[1].UTOOL
+ krl_frame_data : POSITION  --/XYZWPR : $GROUP[1].UFRAME
+ act_pos        : XYZWPR    -- actual position
+ entry          : INTEGER
+ var_name       : STRING[32]
+ status         : INTEGER
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+----------------------------------------------------
+-- BEGIN pos_manip
+----------------------------------------------------
+BEGIN
+    -- option 1:(not used beecause var ype of BYTE
+    -- tpp_tool_num = $MNUTOOLNUM 
+    -- option 2:
+    GET_VAR(entry, '*SYSTEM*', '$MNUTOOLNUM', tpp_tool_num, status)
+    IF status <> 0 THEN
+        WRITE('Error getting tool number: ', status)
+        POST_ERR(status, '', 0, 2)
+        RETURN
+    ENDIF
+    GET_VAR(entry, '*SYSTEM*', '$MNUFRAMENUM', tpp_frame_num, status)
+    IF status <> 0 THEN
+        WRITE('Error getting frame number: ', status)
+        POST_ERR(status, '', 0, 2)
+        RETURN
+    ENDIF
+    -- get tool data:  
+    str_var_name = '$MNUTOOL[1,' + int2str(tpp_tool_num) + ']'
+    GET_VAR(entry, '*SYSTEM*', str_var_name, tpp_tool_data, status)
+    IF status <> 0 THEN
+        WRITE('Error getting tool data: ', status)
+        POST_ERR(status, '', 0, 2)
+        RETURN
+    ENDIF
+    -- get frame data:
+    str_var_name = '$MNUFRAME[1,' + int2str(tpp_frame_num) + ']'
+    GET_VAR(entry, '*SYSTEM*', str_var_name, tpp_frame_data, status)
+    IF status <> 0 THEN
+        WRITE('Error getting frame data: ', status)
+        POST_ERR(status, '', 0, 2)
+        RETURN
+    ENDIF
+    -- copy tpp frames data to karel frame data:
+    
+    -- show act pos 
+    act_pos = CURPOS(axis_limit_mask, ovr_tyv_mask)
+END pos_manip

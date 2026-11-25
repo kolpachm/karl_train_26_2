@@ -249,3 +249,12 @@ BEGIN
     RETURN(ret_value)
     
 END GetCartPosReg
+
+ROUTINE int2str --(num_:INTEGER) : STRING
+VAR 
+  s_     :STRING[16]
+BEGIN
+  CNV_INT_STR(num_, 0, 0, s_) -- Convert integer to string
+  s_ = SUB_STR(s_,2,STR_LEN(s_)) -- Remove leading blank character
+  RETURN (s_)
+END int2str 
