@@ -1,0 +1,49 @@
+
+LINENO   67,2405,        IF (port_ = 0) THEN --port not used/configured
+LINENO   68,2455,          RETURN(FALSE)
+LINENO   69,2474,        ENDIF
+LINENO   70,2483,        GET_PORT_VAL(io_opout, port_, val_, stat_)
+LINENO   71,2529,        IF stat_ <> 0 THEN 
+LINENO   72,2552,          PostErr(status,'Error reading port val',0)
+LINENO   73,2600,          RETURN(FALSE)
+LINENO   74,2619,        ENDIF
+LINENO   75,2628,        RETURN(val_ = 1)
+LINENO   76,2648,      END get_opout
+LINENO   83,2980,          amr_req = 0
+LINENO   84,2997,          IF UNINIT(amr_listening) THEN
+LINENO   85,3032,              amr_listening = 0
+LINENO   86,3059,          ENDIF
+LINENO   87,3070,          IF NOT UNINIT(amr_req_ridx) THEN
+LINENO   88,3108,              SET_INT_REG(amr_req_ridx, amr_req, status)
+LINENO   89,3160,          ENDIF
+LINENO   90,3171,          op_running = get_opout(OP_PRG_RUN)
+LINENO   91,3211,          op_paused  = get_opout(OP_PRG_PAUSED)
+LINENO   92,3254,          IF op_running THEN
+LINENO   93,3278,              p_stat = P_STAT_RUN
+LINENO   94,3307,          ELSE
+LINENO   95,3317,              IF op_paused  THEN
+LINENO   96,3345,                  p_stat = P_STAT_PAUSED
+LINENO   97,3381,              ELSE
+LINENO   98,3395,                  p_stat = P_STAT_STOP
+LINENO   99,3429,              ENDIF
+LINENO   100,3444,          ENDIF
+LINENO   101,3455,          SELECT p_stat OF
+LINENO   103,3504,                  IF amr_listening = 1 THEN --2025-11-10 11:02:43 added to solve problem with AGV is changing after power up
+LINENO   104,3624,                      amr_req = 1 -- signal to TP that robot can start process
+LINENO   105,3698,                      stat_str = 'running' -- program running
+LINENO   107,3881,                  ELSE 
+LINENO   108,3900,                      stat_str = 'stopped'
+LINENO   109,3938,                  ENDIF
+LINENO   111,3987,                  stat_str = 'paused'
+LINENO   113,4035,                  stat_str = 'stopped'
+LINENO   114,4069,          ENDSELECT
+LINENO   115,4084,          resp_str = '{"rob_state": "' + stat_str + '"}'
+LINENO   117,4138,          OPEN FILE resp_file('RW',RESP_PATH)
+LINENO   118,4179,          status = IO_STATUS(resp_file)
+LINENO   119,4214,          PostErr(status,'Error opening response file',0)
+LINENO   121,4269,          CLR_IO_STAT(resp_file)
+LINENO   124,4336,          WRITE resp_file(resp_str)
+LINENO   125,4367,          status = IO_STATUS(resp_file)
+LINENO   126,4402,          PostErr(status,'Error writing response file',0)
+LINENO   128,4457,          CLOSE FILE resp_file
+LINENO   129,4483,      END set_status

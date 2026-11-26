@@ -1,0 +1,130 @@
+PROGRAM set_status
+----------------------------------------------------
+-- Creation date: 2025-01-23 13:26:37
+-- Created by: msk
+----------------------------------------------------
+-- Version: 1.4 
+----------------------------------------------------
+-- Function: send request for palletizing from amr
+-- http://127.0.0.1:9000/KARELCMD/set_status+
+----------------------------------------------------
+-- Last modified: 2025-01-23 13:26:34
+-- Last modified by: msk  
+-- 2025-11-10 11:07:01: modify to v1.4 amr_listening check added in order to 
+-- avoid agv changing state after power up
+----------------------------------------------------
+%COMMENT = 'amr set v1.5'
+%ALPHABETIZE
+%NOABORT = ERROR+COMMAND+TPENABLE
+%NOPAUSE = ERROR+COMMAND+TPENABLE
+%NOPAUSESHFT
+%NOLOCKGROUP
+%NOBUSYLAMP
+-- %CMOSVARS
+-- %CMOS2SHADOW
+-- %SHADOWVARS
+-- %INCLUDE KLEVKEYS
+-- %INCLUDE KLEVKMSK
+-- %INCLUDE KLEVCCDF
+-- %INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+----------------------------------------------------
+-- CONTANTS AND TYPES                               
+----------------------------------------------------
+--CONST
+CONST
+    RESP_PATH     = 'TD:\RESPONSE.HTM'
+    OP_PRG_RUN    = 18 --opout[18]
+    OP_PRG_PAUSED = 19 --opout[19]
+    P_STAT_RUN    = 1
+    P_STAT_PAUSED = 2
+    P_STAT_STOP   = 3
+--TYPE
+----------------------------------------------------
+-- VARIABLES                                        
+----------------------------------------------------
+VAR
+    amr_req         IN DRAM FROM AMR_VARS :INTEGER
+    amr_listening   IN DRAM FROM AMR_VARS :INTEGER
+    amr_req_ridx    IN CMOS FROM AMR_VARS :INTEGER
+    status                                :INTEGER
+    resp_str                              :STRING[128]
+    stat_str                              :STRING[16]
+    op_running                            :BOOLEAN
+    op_paused                             :BOOLEAN   
+    p_stat                                :INTEGER
+    resp_file                             :FILE
+----------------------------------------------------
+-- ROUTINES                                         
+----------------------------------------------------
+ROUTINE PostErrTxt(msg_:STRING) FROM get_status
+ROUTINE PostErr(code_:INTEGER;msg_:STRING;prio_:INTEGER) FROM get_status
+ROUTINE get_opout(port_:INTEGER):BOOLEAN
+VAR
+  stat_     :INTEGER
+  val_      :INTEGER
+BEGIN
+  IF (port_ = 0) THEN --port not used/configured
+    RETURN(FALSE)
+  ENDIF
+  GET_PORT_VAL(io_opout, port_, val_, stat_)
+  IF stat_ <> 0 THEN 
+    PostErr(status,'Error reading port val',0)
+    RETURN(FALSE)
+  ENDIF
+  RETURN(val_ = 1)
+END get_opout
+----------------------------------------------------
+-- BEGIN set_status                             
+----------------------------------------------------
+BEGIN
+    -- here was misunderstandig with status of program itself and process status.
+    -- AMR repeats set_status when robot program is aborted/stopped
+    amr_req = 0
+    IF UNINIT(amr_listening) THEN
+        amr_listening = 0
+    ENDIF
+    IF NOT UNINIT(amr_req_ridx) THEN
+        SET_INT_REG(amr_req_ridx, amr_req, status)
+    ENDIF
+    op_running = get_opout(OP_PRG_RUN)
+    op_paused  = get_opout(OP_PRG_PAUSED)
+    IF op_running THEN
+        p_stat = P_STAT_RUN
+    ELSE
+        IF op_paused  THEN
+            p_stat = P_STAT_PAUSED
+        ELSE
+            p_stat = P_STAT_STOP
+        ENDIF
+    ENDIF
+    SELECT p_stat OF
+        CASE(P_STAT_RUN):
+            IF amr_listening = 1 THEN --2025-11-10 11:02:43 added to solve problem with AGV is changing after power up
+                amr_req = 1 -- signal to TP that robot can start process
+                stat_str = 'running' -- program running
+                -- as soon as prog is running and listening --AMR stops calling this program and start requesting get_status
+            ELSE 
+                stat_str = 'stopped'
+            ENDIF
+        CASE(P_STAT_PAUSED):
+            stat_str = 'paused'
+        ELSE:
+            stat_str = 'stopped'
+    ENDSELECT
+    resp_str = '{"rob_state": "' + stat_str + '"}'
+
+    OPEN FILE resp_file('RW',RESP_PATH)
+    status = IO_STATUS(resp_file)
+    PostErr(status,'Error opening response file',0)
+
+    CLR_IO_STAT(resp_file)
+
+    --write response string to file
+    WRITE resp_file(resp_str)
+    status = IO_STATUS(resp_file)
+    PostErr(status,'Error writing response file',0)
+
+    CLOSE FILE resp_file
+END set_status
+

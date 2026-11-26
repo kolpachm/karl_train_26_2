@@ -1,0 +1,207 @@
+----------------------------------------------------
+-- Creation date: 2020.05.21
+-- Created by: MKOL
+----------------------------------------------------
+-- Version: 1.0.0 - release
+--          2.1.0 -2025-08-12 10:47:14 -
+--          2.1.1 - added ToUpper2 routine - 2026-08-04 14:30:47
+----------------------------------------------------
+-- Function: Interface to Karel Utility Library, Routines
+----------------------------------------------------
+-- Last modified: 2026-08-04 14:30:32
+-- Last modified by: MKOL                           
+----------------------------------------------------
+----------------------------------------------------
+-- TP DISP                             
+----------------------------------------------------
+ROUTINE ForceMenu(menu_id_:INTEGER) FROM utilitylib
+----------------------------------------------------
+ROUTINE ClearTpDev(dispid_:FILE) FROM utilitylib
+----------------------------------------------------
+ROUTINE ForceUser FROM utilitylib
+----------------------------------------------------
+ROUTINE ClearUser FROM utilitylib
+----------------------------------------------------
+ROUTINE ClearErr FROM utilitylib
+----------------------------------------------------
+-- SYS VARS                             
+----------------------------------------------------
+-- This routine gets BOOLEAN type system variable and check operation status
+ROUTINE GetSysB(varname_: STRING): BOOLEAN FROM utilitylib
+----------------------------------------------------------
+-- This routine gets INTEGER type system variable and check operation status
+ROUTINE GetSysI(varname_: STRING): INTEGER FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetSysS(varname_: STRING): STRING FROM utilitylib
+----------------------------------------------------------
+-- This routine sets BOOLEAN type system variable and check operation status
+ROUTINE SetSysB(varname_: STRING; val_: BOOLEAN) FROM utilitylib
+----------------------------------------------------------
+-- This routine sets INTEGER type system variable and check operation status
+ROUTINE SetSysI(varname_: STRING; val_: INTEGER) FROM utilitylib
+----------------------------------------------------
+-- ERR Handling                             
+----------------------------------------------------
+ROUTINE PostErrTxt(msg_:STRING) FROM utilitylib
+ROUTINE chk_stat(stat_:INTEGER;msg_:STRING;severity_:INTEGER;debug_:BOOLEAN) FROM utilitylib
+----------------------------------------------------
+--   File
+----------------------------------------------------
+ROUTINE OpenFile(f_:FILE; fpath_:STRING; method:INTEGER):BOOLEAN FROM utilitylib
+---------------------------------------------------
+ROUTINE CloseFile(f_:FILE):BOOLEAN FROM utilitylib 
+----------------------------------------------------
+ROUTINE Getline(f_:FILE;line_:STRING) : BOOLEAN FROM utilitylib
+----------------------------------------------------
+-- LOG                            
+----------------------------------------------------
+ROUTINE log_pip(f_:FILE;fpath_:STRING;msg_:STRING;pip_cfg_:BOOLEAN) FROM utilitylib
+ROUTINE log_msg(msg_:STRING) FROM utilitylib
+-----------------------------------------------------
+--  Time
+-----------------------------------------------------
+ROUTINE GetSysTimeStr :STRING FROM utilitylib
+----------------------------------------------------
+-- Sring Handling                             
+----------------------------------------------------
+ROUTINE int2str(num_:INTEGER) : STRING FROM utilitylib
+----------------------------------------------------
+ROUTINE real2str(num_:REAL) : STRING FROM utilitylib
+----------------------------------------------------
+ROUTINE real2Str2(num_:REAL;precs_:INTEGER) : STRING FROM utilitylib
+----------------------------------------------------
+ROUTINE bool2str(bool2cnv_:BOOLEAN) : STRING FROM utilitylib
+----------------------------------------------------
+ROUTINE IntParse(str:STRING;stat:INTEGER):INTEGER  FROM utilitylib 
+----------------------------------------------------
+ROUTINE RealParse(str:STRING;stat:INTEGER):REAL FROM utilitylib
+----------------------------------------------------
+ROUTINE SplitStr(separator:STRING;in_string:STRING;out_str_ary:ARRAY OF STRING;cmd_size:INTEGER;l_stat:INTEGER) FROM utilitylib
+----------------------------------------------------
+routine ToUpper(p_char: integer): string FROM utilitylib
+----------------------------------------------------
+ROUTINE ToUpper2 (str_:STRING): string FROM utilitylib
+----------------------------------------------------
+ROUTINE ToLower(str_: string): string FROM utilitylib
+--  Dig Ports
+----------------------------------------------------
+ROUTINE GetMaxIO :INTEGER FROM utilitylib
+----------------------------------------------------
+ROUTINE GetMaxFLG :INTEGER FROM utilitylib
+----------------------------------------------------
+ROUTINE set_flg(port_: INTEGER; val_: BOOLEAN) FROM utilitylib
+----------------------------------------------------
+ROUTINE Get_Din (port_:INTEGER):BOOLEAN FROM utilitylib
+----------------------------------------------------
+ROUTINE Get_Dout(port_:INTEGER):BOOLEAN FROM utilitylib
+----------------------------------------------------
+ROUTINE Get_Gin (port_:INTEGER):INTEGER FROM utilitylib
+----------------------------------------------------
+ROUTINE Set_Dout(port_:INTEGER; val_:BOOLEAN) FROM utilitylib
+----------------------------------------------------
+ROUTINE Set_Gout(port_:INTEGER; val_:INTEGER) FROM utilitylib
+----------------------------------------------------
+--  TPP ARGUMENTS
+----------------------------------------------------
+ROUTINE GetIntArg(idx_:INTEGER):INTEGER FROM utilitylib 
+----------------------------------------------------
+ROUTINE GetRealArg(idx_:INTEGER):REAL FROM utilitylib
+----------------------------------------------------
+ROUTINE GetStrArg(idx_:INTEGER):STRING FROM utilitylib 
+----------------------------------------------------
+--  Registers
+----------------------------------------------------
+ROUTINE GetRealReg(reg_idx_:INTEGER):REAL FROM utilitylib 
+---------------------------------------------------------
+ROUTINE GetRealReg2(reg_idx_:INTEGER):REAL FROM utilitylib
+---------------------------------------------------------
+ROUTINE GetIntReg(reg_idx_:INTEGER):INTEGER FROM utilitylib 
+---------------------------------------------------------
+ROUTINE GetIntReg2(reg_idx_:INTEGER):INTEGER FROM utilitylib
+---------------------------------------------------------
+ROUTINE GetMaxReg :INTEGER FROM utilitylib
+---------------------------------------------------------
+ROUTINE GetMaxPReg :INTEGER FROM utilitylib
+---------------------------------------------------------
+ROUTINE GetPosReg(idx_:INTEGER):XYZWPR FROM utilitylib  
+---------------------------------------------------------
+ROUTINE SetPosReg(idx_:INTEGER;in_pos:XYZWPR) FROM utilitylib 
+---------------------------------------------------------
+ROUTINE GetStrReg(idx_:INTEGER):STRING FROM utilitylib  
+----------------------------------------------------
+--  Math
+----------------------------------------------------
+ROUTINE POW(base_:REAL;exp_:INTEGER):REAL FROM utilitylib 
+----------------------------------------------------
+ROUTINE Dec2Bin(in_:INTEGER;out_:ARRAY OF BOOLEAN) FROM utilitylib
+----------------------------------------------------
+-- This function routine is a random number generator
+-- [IN] : seed
+--        This integer must be 
+--      - a global variable, should be in CMOS,
+--      - initialized with any integer value before 
+--        first call to this routine,
+--      - provided to this routine by reference, 
+--        not value.
+-- [OUT] : random number
+ROUTINE random(seed : INTEGER) : REAL FROM utilitylib
+----------------------------------------------------
+ROUTINE xor(param1, param2 : INTEGER) : INTEGER FROM utilitylib
+----------------------------------------------------
+-- UIF
+----------------------------------------------------
+-- This procedure routine will force specified URL (by default, on the TP_PANEL)
+-- It can be used after gettpuifurl to restore the pane layout, menus and 
+--focus on iPendant.
+ROUTINE setuifurl(url: STRING) FROM utilitylib
+-- This function routine collects, combines in a single 
+--URL, and returns information about 
+--current pane layout of the iPendant 
+--(single, double, etc.), and
+--currently displayed menus (softpart_id and screen_id) 
+--in each pane, and 
+--which pane currently has focus.
+--This URL can be used to restore the pane layout, 
+--menus and focus on iPendant
+ROUTINE gettpuifurl :STRING FROM utilitylib
+----------------------------------------------------
+ROUTINE TPForceWide :STRING FROM utilitylib
+----------------------------------------------------
+--  FRAME/TOOL 
+----------------------------------------------------
+ROUTINE GetMaxUTool:INTEGER FROM utilitylib
+----------------------------------------------------
+ROUTINE GetMaxUFrame:INTEGER FROM utilitylib
+----------------------------------------------------
+ROUTINE GetUFrame(uf_num_:INTEGER):POSITION FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetUTool(ut_num_:INTEGER):POSITION FROM utilitylib
+----------------------------------------------------------
+ROUTINE SetUTool(tool_nr_:INTEGER;pos_:POSITION) FROM utilitylib
+----------------------------------------------------------
+ROUTINE SetUFrame (frame_nr_:INTEGER;pos_:POSITION) FROM utilitylib
+----------------------------------------------------------
+ROUTINE SetActToolNum (tool_nr_:INTEGER) FROM utilitylib
+----------------------------------------------------------
+ROUTINE SetActFrameNum (frame_nr_:INTEGER) FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetFrameDataPos(base_nr_:INTEGER):POSITION FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetToolDataPos(tool_nr_:INTEGER):POSITION FROM utilitylib
+----------------------------------------------------------
+--Position 
+----------------------------------------------------------
+ROUTINE SetConf(cnf_str_:STRING):CONFIG FROM utilitylib
+----------------------------------------------------------
+ROUTINE InitPosNull(pos_:XYZWPREXT) FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetPosCur(tool_nr_:INTEGER;frame_nr_:INTEGER):XYZWPR FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetPosCur2(tool_:POSITION;fame_:POSITION):XYZWPREXT FROM utilitylib
+----------------------------------------------------------
+ROUTINE GetNullPos :POSITION FROM utilitylib
+----------------------------------------------------
+-- Interface
+----------------------------------------------------
+ROUTINE GetOpMode :INTEGER FROM utilitylib
+----------------------------------------------------

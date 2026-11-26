@@ -1,0 +1,121 @@
+PROGRAM get_status
+----------------------------------------------------
+-- Creation date: 2025-01-23 13:26:42
+-- Created by: msk
+----------------------------------------------------
+-- Version: 1.0
+----------------------------------------------------
+-- Function: api for kvados amr
+-- sends status of palletizing program status in JSON string
+-- http://127.0.0.1:9000/KARELCMD/get_status
+-- {"state": "running"|"finished"}
+----------------------------------------------------
+-- Last modified: 2025-01-23 13:26:46
+-- Last modified by: msk                             
+----------------------------------------------------
+%COMMENT = 'amr v1.0'
+%ALPHABETIZE
+%NOABORT = ERROR+COMMAND+TPENABLE
+%NOPAUSE = ERROR+COMMAND+TPENABLE
+%NOPAUSESHFT
+%NOLOCKGROUP
+%NOBUSYLAMP
+-- %CMOSVARS
+-- %CMOS2SHADOW
+-- %SHADOWVARS
+-- %INCLUDE KLEVKEYS
+-- %INCLUDE KLEVKMSK
+-- %INCLUDE KLEVCCDF
+-- %INCLUDE KLIOUOP
+-- %INCLUDE KLIOTYPS
+----------------------------------------------------
+-- CONTANTS AND TYPES                               
+----------------------------------------------------
+CONST
+    RESP_PATH  = 'TD:\RESPONSE.HTM'
+--TYPE
+----------------------------------------------------
+-- VARIABLES                                        
+----------------------------------------------------
+VAR
+    rob_tsk_stat    IN DRAM FROM AMR_VARS :INTEGER 
+    tsk_stat_ridx   IN CMOS FROM AMR_VARS :INTEGER
+    resp_str                           :STRING[128]
+    stat_str                           :STRING[16]
+    resp_file                          :FILE
+    status                             :INTEGER
+----------------------------------------------------
+-- ROUTINES                                         
+----------------------------------------------------
+ROUTINE PostErrTxt(msg_:STRING) FROM get_status
+ROUTINE PostErr(code_:INTEGER;msg_:STRING;prio_:INTEGER) FROM get_status
+----------------------------------------------------
+-- BEGIN get_status                             
+----------------------------------------------------
+BEGIN
+    --build json string
+    IF UNINIT(rob_tsk_stat) THEN
+        rob_tsk_stat = -1
+    ENDIF
+    SELECT rob_tsk_stat OF
+        CASE(0):
+            stat_str = 'finished'
+        CASE(1):
+            stat_str = 'running' --process
+        ELSE:
+            stat_str = 'error'
+    ENDSELECT
+
+    IF NOT UNINIT(tsk_stat_ridx) THEN
+        SET_INT_REG(tsk_stat_ridx, rob_tsk_stat, status)
+        PostErr(status,'Error setting tsk_stat_ridx',0)
+    ENDIF
+
+    resp_str = '{"state": "' + stat_str + '"}'
+    --open response file
+    OPEN FILE resp_file('RW',RESP_PATH)
+    status = IO_STATUS(resp_file)
+    PostErr(status,'Error opening response file',0)
+    CLR_IO_STAT(resp_file)
+    --write response string to file
+    WRITE resp_file(resp_str)
+    status = IO_STATUS(resp_file)
+    PostErr(status,'Error writing response file',0)
+    CLOSE FILE resp_file
+
+END get_status
+
+----------------------------------------------------
+-- ERR Handling                             
+----------------------------------------------------
+ROUTINE PostErrTxt --(msg_:STRING)
+BEGIN 
+  WRITE TPERROR(CHR(128),CHR(137))
+  WRITE TPERROR(msg_,CR)
+END PostErrTxt
+----------------------------------------------------
+ROUTINE PostErr --(code_:INTEGER;msg_:STRING;prio_:INTEGER)
+BEGIN 
+    IF (code_ = 0) THEN
+      RETURN
+    ENDIF
+    --code_ usualy = status - facility code_ ffccc
+    POST_ERR(code_,'', 0,0)
+    IF(msg_ <> '') THEN
+      DELAY(1000)
+      PostErrTxt(msg_)
+    ENDIF
+    SELECT prio_ OF
+      CASE(0):  --WARNING
+        --do nothing
+        RETURN
+      CASE(1):  --PAUSE
+        PAUSE
+      CASE(2):  -- ABORT
+        ABORT 
+      ELSE:
+        ABORT
+    ENDSELECT
+    
+END PostErr
+----------------------------------------------------

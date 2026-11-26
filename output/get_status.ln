@@ -1,0 +1,41 @@
+
+LINENO   57,2102,          IF UNINIT(rob_tsk_stat) THEN
+LINENO   58,2136,              rob_tsk_stat = -1
+LINENO   59,2163,          ENDIF
+LINENO   60,2174,          SELECT rob_tsk_stat OF
+LINENO   62,2220,                  stat_str = 'finished'
+LINENO   64,2273,                  stat_str = 'running' --process
+LINENO   66,2332,                  stat_str = 'error'
+LINENO   67,2364,          ENDSELECT
+LINENO   69,2381,          IF NOT UNINIT(tsk_stat_ridx) THEN
+LINENO   70,2420,              SET_INT_REG(tsk_stat_ridx, rob_tsk_stat, status)
+LINENO   71,2478,              PostErr(status,'Error setting tsk_stat_ridx',0)
+LINENO   72,2535,          ENDIF
+LINENO   74,2548,          resp_str = '{"state": "' + stat_str + '"}'
+LINENO   76,2622,          OPEN FILE resp_file('RW',RESP_PATH)
+LINENO   77,2663,          status = IO_STATUS(resp_file)
+LINENO   78,2698,          PostErr(status,'Error opening response file',0)
+LINENO   79,2751,          CLR_IO_STAT(resp_file)
+LINENO   81,2816,          WRITE resp_file(resp_str)
+LINENO   82,2847,          status = IO_STATUS(resp_file)
+LINENO   83,2882,          PostErr(status,'Error writing response file',0)
+LINENO   84,2935,          CLOSE FILE resp_file
+LINENO   86,2963,      END get_status
+LINENO   93,3179,        WRITE TPERROR(CHR(128),CHR(137))
+LINENO   94,3215,        WRITE TPERROR(msg_,CR)
+LINENO   95,3241,      END PostErrTxt
+LINENO   99,3380,          IF (code_ = 0) THEN
+LINENO   100,3405,            RETURN
+LINENO   101,3419,          ENDIF
+LINENO   103,3482,          POST_ERR(code_,'', 0,0)
+LINENO   104,3511,          IF(msg_ <> '') THEN
+LINENO   105,3536,            DELAY(1000)
+LINENO   106,3555,            PostErrTxt(msg_)
+LINENO   107,3579,          ENDIF
+LINENO   108,3590,          SELECT prio_ OF
+LINENO   111,3660,              RETURN
+LINENO   113,3701,              PAUSE
+LINENO   115,3742,              ABORT 
+LINENO   117,3771,              ABORT
+LINENO   118,3786,          ENDSELECT
+LINENO   120,3807,      END PostErr
