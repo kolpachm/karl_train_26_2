@@ -259,6 +259,15 @@ BEGIN
   RETURN (s_)
 END int2str 
 
+ROUTINE real2str  --(num_:REAL;precs_:INTEGER) : STRING
+VAR 
+  dummy_str_ :STRING[16] 
+BEGIN
+  CNV_REAL_STR(num_,0,precs_,dummy_str_)--convert real to srting 
+  dummy_str_ = SUB_STR(dummy_str_,2,STR_LEN(dummy_str_)) -- Remove leading blank character
+  RETURN(dummy_str_)
+END real2str
+
 ROUTINE GetTppFrmData--(frame_no : INTEGER) : POSITION FROM my_lib
     VAR 
     max_num_frm :INTEGER
