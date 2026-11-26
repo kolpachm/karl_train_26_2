@@ -8,5 +8,6 @@ ROUTINE GetRealReg(reg_no:INTEGER):REAL   FROM my_lib
 ROUTINE SetNumReg(reg_no:INTEGER;value:REAL):INTEGER FROM my_lib
 ROUTINE GetCartPosReg(reg_no:INTEGER):XYZWPREXT FROM my_lib
 ROUTINE int2str (num_:INTEGER) : STRING FROM my_lib
+ROUTINE real2Str (num_:REAL;precs_:INTEGER) : STRING FROM my_lib
 ROUTINE GetTppFrmData(frame_no : INTEGER) : POSITION FROM my_lib
 ROUTINE GetTppToolData(tool_no : INTEGER) : POSITION FROM my_lib
