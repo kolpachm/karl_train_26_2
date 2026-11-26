@@ -1,0 +1,48 @@
+
+LINENO   50,1249,        IF UNINIT(port_idx) THEN
+LINENO   51,1277,          port_idx = 2
+LINENO   52,1295,        ENDIF
+LINENO   53,1304,        IF UNINIT(gin_idx) THEN
+LINENO   54,1331,          gin_idx = 1
+LINENO   55,1348,        ENDIF
+LINENO   56,1357,        IF UNINIT(gout_idx) THEN
+LINENO   57,1385,          gout_idx = 1
+LINENO   58,1403,        ENDIF
+LINENO   59,1412,        clear_screen(TPDISPLAY)
+LINENO   61,1446,          dig_sig_value = DIN[port_idx]
+LINENO   62,1481,          WRITE('Digital input ',port_idx,' value: ', dig_sig_value,CR)
+LINENO   63,1548,          GET_PORT_VAL(io_din, port_idx, dig_int_value, status)
+LINENO   64,1607,          IF status <> 0 THEN
+LINENO   65,1632,            POST_ERR(status, '', 0, 0)
+LINENO   66,1666,          ENDIF
+LINENO   67,1677,          WRITE('Digital input ',port_idx,' integer value: ', dig_int_value,CR)
+LINENO   69,1793,          gout_idx = 1 -- 8 bit gorup - value 1111 1111 = 255
+LINENO   70,1850,          grp_out_val = GOUT[gout_idx] -- grp_out_val = 255
+LINENO   71,1905,          WRITE('Group output value ',gout_idx,' : ', grp_out_val,CR)
+LINENO   73,1972,          GET_PORT_VAL(io_gpout, gout_idx, grp_out_val2, status) -- grp_out_val = 255
+LINENO   74,2053,          IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+LINENO   74,2053,          IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+LINENO   74,2053,          IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+LINENO   75,2112,          WRITE('Group output value2 ',gout_idx,' : ', grp_out_val2,CR)
+LINENO   77,2181,          gout_idx = 2 -- 16 bit group - value 1111 1111 1111 1111 = 65535
+LINENO   79,2275,          grp_out_val = GOUT[gout_idx] -- grp_out_val = -1
+LINENO   80,2329,          WRITE('Group output value ',gout_idx,' : ', grp_out_val,CR)
+LINENO   83,2420,          GET_PORT_VAL(io_gpout, gout_idx, grp_out_val2, status) -- grp_out_val = 65535
+LINENO   84,2503,          IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+LINENO   84,2503,          IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+LINENO   84,2503,          IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+LINENO   85,2562,          WRITE('Group output value2 ',gout_idx,' : ', grp_out_val2,CR)
+LINENO   88,2633,          WRITE('=====Grpoup input========',CR)
+LINENO   89,2676,          grp_in_val = GIN[gin_idx]
+LINENO   90,2707,          WRITE('Group input value ',gin_idx,' : ', grp_in_val,CR)
+LINENO   91,2769,          GET_PORT_VAL(io_gpin, gin_idx, grp_in_val2, status)
+LINENO   92,2826,          IF status <> 0 THEN
+LINENO   93,2851,            POST_ERR(status, '', 0, 0)
+LINENO   94,2885,          ENDIF
+LINENO   95,2896,          WRITE('Group input value2 ',gin_idx,' : ', grp_in_val2,CR)
+LINENO   97,2969,          DOUT[port_idx] = ON --TRUE
+LINENO   98,3001,          SET_PORT_VAL(io_dout, port_idx, 1, status)
+LINENO   99,3049,          IF status <> 0 THEN
+LINENO   100,3074,            POST_ERR(status, '', 0, 0)
+LINENO   101,3108,          ENDIF
+LINENO   102,3119,      END io_manip

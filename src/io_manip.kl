@@ -1,0 +1,102 @@
+PROGRAM io_manip
+----------------------------------------------------
+-- Creation date: 2026-11-26
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-26
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.2'
+--%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR
+--%SYSTEM
+--%PRIORITY = 49
+--%INCLUDE KLEVKEYS
+--%INCLUDE KLEVKMSK
+--%INCLUDE KLEVCCDF
+--%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+--CONST
+--TYPE
+VAR 
+ dig_sig_value : BOOLEAN
+ dig_int_value : INTEGER
+ status : INTEGER
+ port_idx : INTEGER
+ gin_idx : INTEGER
+ gout_idx : INTEGER
+ grp_in_val : INTEGER
+ grp_in_val2 : INTEGER
+ grp_out_val : INTEGER
+ grp_out_val2 : INTEGER
+
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+----------------------------------------------------
+-- BEGIN io_manip
+----------------------------------------------------
+BEGIN
+  IF UNINIT(port_idx) THEN
+    port_idx = 2
+  ENDIF
+  IF UNINIT(gin_idx) THEN
+    gin_idx = 1
+  ENDIF
+  IF UNINIT(gout_idx) THEN
+    gout_idx = 1
+  ENDIF
+  clear_screen(TPDISPLAY)
+--get
+    dig_sig_value = DIN[port_idx]
+    WRITE('Digital input ',port_idx,' value: ', dig_sig_value,CR)
+    GET_PORT_VAL(io_din, port_idx, dig_int_value, status)
+    IF status <> 0 THEN
+      POST_ERR(status, '', 0, 0)
+    ENDIF
+    WRITE('Digital input ',port_idx,' integer value: ', dig_int_value,CR)
+    -- Reading group signals 2 methods:
+    gout_idx = 1 -- 8 bit gorup - value 1111 1111 = 255
+    grp_out_val = GOUT[gout_idx] -- grp_out_val = 255
+    WRITE('Group output value ',gout_idx,' : ', grp_out_val,CR)
+
+    GET_PORT_VAL(io_gpout, gout_idx, grp_out_val2, status) -- grp_out_val = 255
+    IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+    WRITE('Group output value2 ',gout_idx,' : ', grp_out_val2,CR)
+
+    gout_idx = 2 -- 16 bit group - value 1111 1111 1111 1111 = 65535
+    -- Read option 1: 
+    grp_out_val = GOUT[gout_idx] -- grp_out_val = -1
+    WRITE('Group output value ',gout_idx,' : ', grp_out_val,CR)
+
+    -- Read option 2: 
+    GET_PORT_VAL(io_gpout, gout_idx, grp_out_val2, status) -- grp_out_val = 65535
+    IF status <> 0 THEN POST_ERR(status, '', 0, 0); ENDIF
+    WRITE('Group output value2 ',gout_idx,' : ', grp_out_val2,CR)
+
+
+    WRITE('=====Grpoup input========',CR)
+    grp_in_val = GIN[gin_idx]
+    WRITE('Group input value ',gin_idx,' : ', grp_in_val,CR)
+    GET_PORT_VAL(io_gpin, gin_idx, grp_in_val2, status)
+    IF status <> 0 THEN
+      POST_ERR(status, '', 0, 0)
+    ENDIF
+    WRITE('Group input value2 ',gin_idx,' : ', grp_in_val2,CR)
+-- set 
+    DOUT[port_idx] = ON --TRUE
+    SET_PORT_VAL(io_dout, port_idx, 1, status)
+    IF status <> 0 THEN
+      POST_ERR(status, '', 0, 0)
+    ENDIF
+END io_manip
