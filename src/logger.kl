@@ -11,7 +11,7 @@ PROGRAM logger
 -- Last modified: 2026-11-26
 -- Last modified by: msk
 ----------------------------------------------------
-%COMMENT = 'v0.1'
+%COMMENT = 'v0.2'
 %ALPHABETIZE
 %NOLOCKGROUP
 %NOBUSYLAMP

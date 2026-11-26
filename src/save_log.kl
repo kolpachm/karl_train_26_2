@@ -1,0 +1,48 @@
+PROGRAM save_log
+----------------------------------------------------
+-- Creation date: 2026-11-26
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: Saving pip to selected dir in order dto download log
+----------------------------------------------------
+-- Last modified: 2026-11-26
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.2'
+--%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR + COMMAND
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+CONST
+    f_path = 'PIP:applog.dt'
+--TYPE
+VAR
+ dest_path :STRING[254]
+ status    :INTEGER
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+----------------------------------------------------
+-- BEGIN save_log
+----------------------------------------------------
+BEGIN
+    IF UNINIT(dest_path) THEN 
+        dest_path = 'FR:'
+    ENDIF
+    COPY_FILE(f_path, dest_path, TRUE, FALSE, status)
+    IF status <> 0 THEN
+        POST_ERR(status, '', 0, 0)
+    ENDIF
+END save_log

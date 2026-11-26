@@ -1,0 +1,9 @@
+
+LINENO   41,1126,          IF UNINIT(dest_path) THEN 
+LINENO   42,1158,              dest_path = 'FR:'
+LINENO   43,1185,          ENDIF
+LINENO   44,1196,          COPY_FILE(f_path, dest_path, TRUE, FALSE, status)
+LINENO   45,1251,          IF status <> 0 THEN
+LINENO   46,1276,              POST_ERR(status, '', 0, 0)
+LINENO   47,1312,          ENDIF
+LINENO   48,1323,      END save_log
