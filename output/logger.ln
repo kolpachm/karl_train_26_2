@@ -1,0 +1,42 @@
+
+LINENO   56,1458,          IF UNINIT(prg_stop) THEN prg_stop = FALSE; ENDIF
+LINENO   56,1458,          IF UNINIT(prg_stop) THEN prg_stop = FALSE; ENDIF
+LINENO   56,1458,          IF UNINIT(prg_stop) THEN prg_stop = FALSE; ENDIF
+LINENO   57,1512,          IF UNINIT(cmos_flg) THEN cmos_flg = TRUE; ENDIF
+LINENO   57,1512,          IF UNINIT(cmos_flg) THEN cmos_flg = TRUE; ENDIF
+LINENO   57,1512,          IF UNINIT(cmos_flg) THEN cmos_flg = TRUE; ENDIF
+LINENO   58,1565,          IF UNINIT(pip_configured) THEN pip_configured = FALSE; ENDIF
+LINENO   58,1565,          IF UNINIT(pip_configured) THEN pip_configured = FALSE; ENDIF
+LINENO   58,1565,          IF UNINIT(pip_configured) THEN pip_configured = FALSE; ENDIF
+LINENO   59,1631,          IF UNINIT(reg_index) THEN reg_index = 1; ENDIF
+LINENO   59,1631,          IF UNINIT(reg_index) THEN reg_index = 1; ENDIF
+LINENO   59,1631,          IF UNINIT(reg_index) THEN reg_index = 1; ENDIF
+LINENO   60,1683,          IF NOT pip_configured THEN
+LINENO   61,1715,              PIPE_CONFIG(f_path, cmos_flg, n_sectors, record_size, form_dict, form_ele, status)
+LINENO   62,1807,              pip_configured = TRUE
+LINENO   63,1838,          ENDIF
+LINENO   64,1849,          SET_FILE_ATR(file_id, ATR_IA) -- flush buffer each WRITE
+LINENO   65,1911,          SET_FILE_ATR(file_id, ATR_UF) -- binary mode
+LINENO   66,1961,          OPEN FILE file_id('AP', f_path)
+LINENO   67,1998,          status = IO_STATUS(file_id)
+LINENO   68,2031,          IF status <> 0 THEN
+LINENO   69,2056,              POST_ERR(status, '', 0, 2)
+LINENO   70,2092,              RETURN
+LINENO   71,2108,          ENDIF
+LINENO   72,2119,          reg_val = GetRealReg(reg_index)
+LINENO   73,2156,          reg_val_old = reg_val
+LINENO   74,2183,          WHILE NOT prg_stop DO
+LINENO   75,2210,              reg_val = GetRealReg(reg_index)
+LINENO   76,2251,              IF (reg_val <> reg_val_old) THEN
+LINENO   78,2321,                  GET_TIME(time_int)
+LINENO   79,2353,                  CNV_TIME_STR(time_int, sys_time_str)
+LINENO   80,2403,                  log_str = sys_time_str + ': ' + 'R[ ' + int2str(reg_index) + ' ] changed from ' + real2str(reg_val_old,2) + ' to ' + real2str(reg_val,2) + CHR(13) + CHR(10)
+LINENO   81,2573,                  WRITE file_id(log_str::STR_LEN(log_str))
+LINENO   82,2627,                  reg_val_old = reg_val
+LINENO   83,2662,              ELSE
+LINENO   84,2676,                  DELAY 100
+LINENO   85,2699,              ENDIF
+LINENO   86,2714,          ENDWHILE 
+LINENO   87,2729,          CLOSE FILE file_id
+LINENO   88,2753,          prg_stop = FALSE
+LINENO   89,2775,      END logger 

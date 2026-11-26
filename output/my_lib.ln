@@ -68,35 +68,39 @@ LINENO   257,7497,        CNV_INT_STR(num_, 0, 0, s_) -- Convert integer to stri
 LINENO   258,7557,        s_ = SUB_STR(s_,2,STR_LEN(s_)) -- Remove leading blank character
 LINENO   259,7625,        RETURN (s_)
 LINENO   260,7640,      END int2str 
-LINENO   269,7851,              max_num_frm = $SCR.$MAXNUMUFRAM 
-LINENO   270,7893,              IF (frame_no > 0) AND (frame_no <= max_num_frm) THEN
-LINENO   271,7955,                  GET_VAR(entry, '*SYSTEM*', '$MNUFRAME[1,' + int2str(frame_no) + ']', ret_value, status)
-LINENO   272,8056,                  IF status <> 0 THEN
-LINENO   274,8122,                      POST_ERR(status,'',0, 2)
-LINENO   275,8164,                  ENDIF 
-LINENO   276,8184,                  RETURN(ret_value)
-LINENO   277,8215,              ENDIF 
-LINENO   278,8231,              IF (frame_no = 0) THEN 
-LINENO   279,8264,                  ret_value = $MOR_GRP[1].$NILPOS
-LINENO   280,8309,                  RETURN(ret_value)
-LINENO   281,8340,              ENDIF
-LINENO   282,8355,              IF (frame_no < 0) OR (frame_no > max_num_frm) THEN
-LINENO   284,8459,                  POST_ERR(16107,'',0, 2)
-LINENO   285,8496,              ENDIF
-LINENO   286,8511,      END GetTppFrmData
-LINENO   295,8728,              max_num_tool = $SCR.$MAXNUMUTOOL 
-LINENO   296,8771,              IF (tool_no > 0) AND (tool_no <= max_num_tool) THEN
-LINENO   297,8832,                  GET_VAR(entry, '*SYSTEM*', '$MNUTOOL[1,' + int2str(tool_no) + ']', ret_value, status)
-LINENO   298,8931,                  IF status <> 0 THEN
-LINENO   300,8997,                      POST_ERR(status,'',0, 2)
-LINENO   301,9039,                  ENDIF 
-LINENO   302,9059,                  RETURN(ret_value)
-LINENO   303,9090,              ENDIF 
-LINENO   304,9106,              IF tool_no = 0 THEN 
-LINENO   305,9136,                  ret_value = $MOR_GRP[1].$NILPOS
-LINENO   306,9181,                  RETURN(ret_value)
-LINENO   307,9212,              ENDIF
-LINENO   308,9227,              IF (tool_no < 0) OR (tool_no > max_num_tool) THEN
-LINENO   310,9329,              POST_ERR(16107,'',0, 2)
-LINENO   311,9362,          ENDIF
-LINENO   312,9373,      END GetTppToolData
+LINENO   266,7753,        CNV_REAL_STR(num_,0,precs_,dummy_str_)--convert real to srting 
+LINENO   267,7820,        dummy_str_ = SUB_STR(dummy_str_,2,STR_LEN(dummy_str_)) -- Remove leading blank character
+LINENO   268,7912,        RETURN(dummy_str_)
+LINENO   269,7934,      END real2str
+LINENO   278,8145,              max_num_frm = $SCR.$MAXNUMUFRAM 
+LINENO   279,8187,              IF (frame_no > 0) AND (frame_no <= max_num_frm) THEN
+LINENO   280,8249,                  GET_VAR(entry, '*SYSTEM*', '$MNUFRAME[1,' + int2str(frame_no) + ']', ret_value, status)
+LINENO   281,8350,                  IF status <> 0 THEN
+LINENO   283,8416,                      POST_ERR(status,'',0, 2)
+LINENO   284,8458,                  ENDIF 
+LINENO   285,8478,                  RETURN(ret_value)
+LINENO   286,8509,              ENDIF 
+LINENO   287,8525,              IF (frame_no = 0) THEN 
+LINENO   288,8558,                  ret_value = $MOR_GRP[1].$NILPOS
+LINENO   289,8603,                  RETURN(ret_value)
+LINENO   290,8634,              ENDIF
+LINENO   291,8649,              IF (frame_no < 0) OR (frame_no > max_num_frm) THEN
+LINENO   293,8753,                  POST_ERR(16107,'',0, 2)
+LINENO   294,8790,              ENDIF
+LINENO   295,8805,      END GetTppFrmData
+LINENO   304,9022,              max_num_tool = $SCR.$MAXNUMUTOOL 
+LINENO   305,9065,              IF (tool_no > 0) AND (tool_no <= max_num_tool) THEN
+LINENO   306,9126,                  GET_VAR(entry, '*SYSTEM*', '$MNUTOOL[1,' + int2str(tool_no) + ']', ret_value, status)
+LINENO   307,9225,                  IF status <> 0 THEN
+LINENO   309,9291,                      POST_ERR(status,'',0, 2)
+LINENO   310,9333,                  ENDIF 
+LINENO   311,9353,                  RETURN(ret_value)
+LINENO   312,9384,              ENDIF 
+LINENO   313,9400,              IF tool_no = 0 THEN 
+LINENO   314,9430,                  ret_value = $MOR_GRP[1].$NILPOS
+LINENO   315,9475,                  RETURN(ret_value)
+LINENO   316,9506,              ENDIF
+LINENO   317,9521,              IF (tool_no < 0) OR (tool_no > max_num_tool) THEN
+LINENO   319,9623,              POST_ERR(16107,'',0, 2)
+LINENO   320,9656,          ENDIF
+LINENO   321,9667,      END GetTppToolData

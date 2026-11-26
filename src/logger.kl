@@ -1,0 +1,90 @@
+PROGRAM logger
+----------------------------------------------------
+-- Creation date: 2026-11-26
+-- Created by: msk
+----------------------------------------------------
+-- Version info:
+--   0.0 - first release
+----------------------------------------------------
+-- Function: 
+----------------------------------------------------
+-- Last modified: 2026-11-26
+-- Last modified by: msk
+----------------------------------------------------
+%COMMENT = 'v0.1'
+%ALPHABETIZE
+%NOLOCKGROUP
+%NOBUSYLAMP
+%NOPAUSE = ERROR + COMMAND + TPENABLE
+%NOPAUSESHFT
+%NOABORT = ERROR + COMMAND
+--%SYSTEM
+--%PRIORITY = 49
+%INCLUDE KLEVKEYS
+%INCLUDE KLEVKMSK
+%INCLUDE KLEVCCDF
+%INCLUDE KLIOUOP
+%INCLUDE KLIOTYPS
+CONST
+    f_path = 'PIP:applog.dt'
+    n_sectors = 16
+    record_size = 128
+    form_dict = 'log'
+    form_ele = 1
+
+--TYPE
+VAR
+    prg_stop        :BOOLEAN
+    cmos_flg        :BOOLEAN
+    pip_configured  :BOOLEAN
+    file_id         :FILE
+    status          :INTEGER
+    log_str         :STRING[254]
+    reg_val         :REAL 
+    reg_val_old     :REAL
+    reg_index       :INTEGER
+    sys_time_str     :STRING[32]
+    time_int         :INTEGER
+----------------------------------------------------
+-- ROUTINE DECL
+----------------------------------------------------
+%INCLUDE my_lib_h
+----------------------------------------------------
+-- BEGIN logger
+----------------------------------------------------
+BEGIN
+    IF UNINIT(prg_stop) THEN prg_stop = FALSE; ENDIF
+    IF UNINIT(cmos_flg) THEN cmos_flg = TRUE; ENDIF
+    IF UNINIT(pip_configured) THEN pip_configured = FALSE; ENDIF
+    IF UNINIT(reg_index) THEN reg_index = 1; ENDIF
+    IF NOT pip_configured THEN
+        PIPE_CONFIG(f_path, cmos_flg, n_sectors, record_size, form_dict, form_ele, status)
+        pip_configured = TRUE
+    ENDIF
+    SET_FILE_ATR(file_id, ATR_IA) -- flush buffer each WRITE
+    SET_FILE_ATR(file_id, ATR_UF) -- binary mode
+    OPEN FILE file_id('AP', f_path)
+    status = IO_STATUS(file_id)
+    IF status <> 0 THEN
+        POST_ERR(status, '', 0, 2)
+        RETURN
+    ENDIF
+    reg_val = GetRealReg(reg_index)
+    reg_val_old = reg_val
+    WHILE NOT prg_stop DO
+        reg_val = GetRealReg(reg_index)
+        IF (reg_val <> reg_val_old) THEN
+            --log_str = ''
+            GET_TIME(time_int)
+            CNV_TIME_STR(time_int, sys_time_str)
+            log_str = sys_time_str + ': ' + 'R[ ' + int2str(reg_index) + ' ] changed from ' + real2str(reg_val_old,2) + ' to ' + real2str(reg_val,2) + CHR(13) + CHR(10)
+            WRITE file_id(log_str::STR_LEN(log_str))
+            reg_val_old = reg_val
+        ELSE
+            DELAY 100
+        ENDIF
+    ENDWHILE 
+    CLOSE FILE file_id
+    prg_stop = FALSE
+END logger 
+
